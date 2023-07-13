@@ -84,7 +84,7 @@ export async function createConfig(
   paths: BundlingPaths,
   options: BundlingOptions,
 ): Promise<webpack.Configuration> {
-  const { checksEnabled, isDev, frontendConfig } = options;
+  const { checksEnabled, isDev, frontendConfig, extraPackages } = options;
 
   const { plugins, loaders } = transforms(options);
   // Any package that is part of the monorepo but outside the monorepo root dir need
@@ -133,10 +133,26 @@ export async function createConfig(
     }),
   );
 
+  plugins.push(
+    new ProvidePlugin(
+      Object.fromEntries(
+        extraPackages?.map(name => [
+          `__backstageLoadedPackage_${name}`,
+          name,
+        ]) ?? [],
+      ),
+    ),
+  );
+
+  // In browser
+  // const packageKeys = Object.keys(window).filter(key => key.startsWith('__backstageLoadedPackage_'))
+
   const buildInfo = await readBuildInfo();
   plugins.push(
     new webpack.DefinePlugin({
       'process.env.BUILD_INFO': JSON.stringify(buildInfo),
+      'process.env.EXTRA_PACKAGE_IMPORTS': JSON.stringify(extraPackages),
+      'process.env.SINGLE_PACKAGE_IMPORT': JSON.stringify(extraPackages[0]),
     }),
   );
 
@@ -163,7 +179,7 @@ export async function createConfig(
     },
     devtool: isDev ? 'eval-cheap-module-source-map' : 'source-map',
     context: paths.targetPath,
-    entry: [paths.targetEntry],
+    entry: [paths.targetEntry, ...(extraPackages ?? [])],
     resolve: {
       extensions: ['.ts', '.tsx', '.mjs', '.js', '.jsx', '.json', '.wasm'],
       mainFields: ['browser', 'module', 'main'],

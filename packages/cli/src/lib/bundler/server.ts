@@ -23,6 +23,9 @@ import { ServeOptions } from './types';
 import { resolveBundlingPaths } from './paths';
 
 export async function serveBundle(options: ServeOptions) {
+  // TODO: proper
+  const extraPackages = ['@backstage/plugin-org'];
+
   const url = resolveBaseUrl(options.frontendConfig);
 
   const host =
@@ -37,6 +40,7 @@ export async function serveBundle(options: ServeOptions) {
   const pkg = await fs.readJson(pkgPath);
   const config = await createConfig(paths, {
     ...options,
+    extraPackages,
     isDev: true,
     baseUrl: url,
   });
