@@ -33,7 +33,7 @@ export async function serveBundle(options: ServeOptions) {
   const packageDetectionMode = options.fullConfig.getOptional(
     'app.experimental.packages',
   );
-  const extraPackages = [];
+  const extraPackages: string[] = [];
   if (packageDetectionMode === 'all') {
     for (const depName of Object.keys(pkg.dependencies ?? {})) {
       const depPackageJson: BackstagePackageJson = require(require.resolve(
@@ -49,9 +49,10 @@ export async function serveBundle(options: ServeOptions) {
       }
     }
   } else {
-    const packagesList = Array.isArray(packageDetectionMode)
-      ? packageDetectionMode
-      : [];
+    const packagesList = options.fullConfig.getStringArray(
+      'app.experimental.packages',
+    );
+
     for (const depName of packagesList ?? []) {
       const depPackageJson: BackstagePackageJson = require(require.resolve(
         `${depName}/package.json`,
@@ -115,7 +116,6 @@ export async function serveBundle(options: ServeOptions) {
           : false,
       host,
       port,
-      proxy: pkg.proxy,
       // When the dev server is behind a proxy, the host and public hostname differ
       allowedHosts: [url.hostname],
       client: {
