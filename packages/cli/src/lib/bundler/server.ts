@@ -14,58 +14,15 @@
  * limitations under the License.
  */
 
-import fs from 'fs-extra';
 import webpack from 'webpack';
 import WebpackDevServer from 'webpack-dev-server';
 import openBrowser from 'react-dev-utils/openBrowser';
 import { createConfig, resolveBaseUrl } from './config';
 import { ServeOptions } from './types';
 import { resolveBundlingPaths } from './paths';
-import { BackstagePackageJson } from '@backstage/cli-node';
 
 export async function serveBundle(options: ServeOptions) {
   const paths = resolveBundlingPaths(options);
-  const pkgPath = paths.targetPackageJson;
-  const pkg: BackstagePackageJson = await fs.readJson(pkgPath);
-
-  // TODO: proper
-  // Assumption for config string based on https://github.com/backstage/backstage/issues/18372 ^
-  const packageDetectionMode =
-    options.fullConfig.getOptional('app.experimental.packages') || 'all';
-  const extraPackages: string[] = [];
-  if (packageDetectionMode === 'all') {
-    for (const depName of Object.keys(pkg.dependencies ?? {})) {
-      const depPackageJson: BackstagePackageJson = require(require.resolve(
-        `${depName}/package.json`,
-        { paths: [paths.targetPath] },
-      ));
-      if (
-        ['frontend-plugin', 'frontend-plugin-module'].includes(
-          depPackageJson.backstage?.role || '',
-        )
-      ) {
-        extraPackages.push(depName);
-      }
-    }
-  } else {
-    const packagesList = options.fullConfig.getStringArray(
-      'app.experimental.packages',
-    );
-
-    for (const depName of packagesList ?? []) {
-      const depPackageJson: BackstagePackageJson = require(require.resolve(
-        `${depName}/package.json`,
-        { paths: [paths.targetPath] },
-      ));
-      if (
-        ['frontend-plugin', 'frontend-plugin-module'].includes(
-          depPackageJson.backstage?.role || '',
-        )
-      ) {
-        extraPackages.push(depName);
-      }
-    }
-  }
 
   const url = resolveBaseUrl(options.frontendConfig);
 
@@ -78,7 +35,6 @@ export async function serveBundle(options: ServeOptions) {
 
   const config = await createConfig(paths, {
     ...options,
-    extraPackages,
     isDev: true,
     baseUrl: url,
   });

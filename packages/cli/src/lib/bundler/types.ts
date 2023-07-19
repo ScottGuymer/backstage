@@ -23,9 +23,11 @@ export type BundlingOptions = {
   isDev: boolean;
   frontendConfig: Config;
   frontendAppConfigs: AppConfig[];
+  fullConfig: Config;
   baseUrl: URL;
   parallelism?: number;
-  extraPackages?: string[];
+  entry: string;
+  targetDir?: string;
 };
 
 export type ServeOptions = BundlingPathsOptions & {
@@ -43,6 +45,7 @@ export type BuildOptions = BundlingPathsOptions & {
   schema?: ConfigSchema;
   frontendConfig: Config;
   frontendAppConfigs: AppConfig[];
+  fullConfig: Config;
 };
 
 export type BackendBundlingOptions = {
