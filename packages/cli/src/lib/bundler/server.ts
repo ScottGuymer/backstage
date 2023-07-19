@@ -20,6 +20,7 @@ import openBrowser from 'react-dev-utils/openBrowser';
 import { createConfig, resolveBaseUrl } from './config';
 import { ServeOptions } from './types';
 import { resolveBundlingPaths } from './paths';
+import { writeDetectedPluginsModule } from './discover';
 
 export async function serveBundle(options: ServeOptions) {
   const paths = resolveBundlingPaths(options);
@@ -37,6 +38,12 @@ export async function serveBundle(options: ServeOptions) {
     ...options,
     isDev: true,
     baseUrl: url,
+  });
+
+  await writeDetectedPluginsModule({
+    config: options.fullConfig,
+    entry: options.entry,
+    targetDir: options.targetDir,
   });
 
   const compiler = webpack(config);
