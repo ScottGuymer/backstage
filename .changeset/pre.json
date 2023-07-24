@@ -228,7 +228,23 @@
     "@backstage/plugin-user-settings-backend": "0.1.11",
     "@backstage/plugin-vault": "0.1.14",
     "@backstage/plugin-vault-backend": "0.3.3",
-    "@backstage/plugin-xcmetrics": "0.2.40"
+    "@backstage/plugin-xcmetrics": "0.2.40",
+    "@backstage/plugin-analytics-module-newrelic-browser": "0.0.0"
   },
-  "changesets": []
+  "changesets": [
+    "chatty-foxes-buy",
+    "create-app-1690188888",
+    "gorgeous-months-doubt",
+    "loud-garlics-press",
+    "mean-squids-relax",
+    "pink-squids-nail",
+    "quiet-starfishes-kick",
+    "rude-feet-sparkle",
+    "search-donuts-wash",
+    "selfish-coats-shout",
+    "serious-bats-repair",
+    "smart-pandas-applaud",
+    "stupid-berries-run",
+    "ten-otters-appear"
+  ]
 }

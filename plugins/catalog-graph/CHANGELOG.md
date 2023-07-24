@@ -1,5 +1,19 @@
 # @backstage/plugin-catalog-graph
 
+## 0.2.33-next.0
+
+### Patch Changes
+
+- 64ee2c0c7ca5: Propagate entity spec to EntityNode so that spec info such as type can be used for graph node customization
+- Updated dependencies
+  - @backstage/catalog-client@1.4.3
+  - @backstage/catalog-model@1.4.1
+  - @backstage/core-components@0.13.3
+  - @backstage/core-plugin-api@1.5.3
+  - @backstage/theme@0.4.1
+  - @backstage/types@1.1.0
+  - @backstage/plugin-catalog-react@1.8.0
+
 ## 0.2.32
 
 ### Patch Changes

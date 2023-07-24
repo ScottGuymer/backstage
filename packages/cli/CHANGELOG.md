@@ -1,5 +1,22 @@
 # @backstage/cli
 
+## 0.22.10-next.0
+
+### Patch Changes
+
+- 3f67cefb4780: Reload the frontend when app config changes
+- Updated dependencies
+  - @backstage/config-loader@1.4.0-next.0
+  - @backstage/catalog-model@1.4.1
+  - @backstage/cli-common@0.1.12
+  - @backstage/cli-node@0.1.2
+  - @backstage/config@1.0.8
+  - @backstage/errors@1.2.1
+  - @backstage/eslint-plugin@0.1.3
+  - @backstage/integration@1.5.1
+  - @backstage/release-manifests@0.0.9
+  - @backstage/types@1.1.0
+
 ## 0.22.9
 
 ### Patch Changes
