@@ -76,6 +76,7 @@ import {
   getOrganizationsFromUser,
   getOrganizationTeam,
   getOrganizationTeamsFromUsers,
+  getOrganizationTeamsForUsers,
 } from '../lib/github';
 import { splitTeamSlug } from '../lib/util';
 
@@ -536,7 +537,7 @@ export class GithubMultiOrgEntityProvider implements EntityProvider {
           headers: orgHeaders,
         });
 
-        const { groups } = await getOrganizationTeamsFromUsers(
+        const { groups } = await getOrganizationTeamsForUsers(
           orgClient,
           userOrg,
           [login],
@@ -765,7 +766,7 @@ export class GithubMultiOrgEntityProvider implements EntityProvider {
         headers: orgHeaders,
       });
 
-      const { groups } = await getOrganizationTeamsFromUsers(
+      const { groups } = await getOrganizationTeamsForUsers(
         orgClient,
         userOrg,
         [login],

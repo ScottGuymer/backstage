@@ -343,6 +343,81 @@ export async function getOrganizationTeamsFromUsers(
   return { groups };
 }
 
+async function getOrganizationTeamsForUser(
+  client: typeof graphql,
+  org: string,
+  userLogin: string,
+  teamTransformer: TeamTransformer,
+): Promise<GroupEntity[]> {
+  const query = `
+   query teams($org: String!, $cursor: String, $userLogins: [String!] = "") {
+  organization(login: $org) {
+    teams(first: 100, after: $cursor, userLogins: $userLogins) {
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
+      nodes {
+        slug
+        combinedSlug
+        name
+        description
+        avatarUrl
+        editTeamUrl
+        parentTeam {
+          slug
+        }
+      }
+    }
+  }
+}`;
+
+  const materialisedTeams = async (
+    item: GithubTeamResponse,
+    ctx: TransformerContext,
+  ): Promise<GroupEntity | undefined> => {
+    const team: GithubTeam = {
+      ...item,
+      members: [{ login: userLogin }],
+    };
+
+    return await teamTransformer(team, ctx);
+  };
+
+  const groups = await queryWithPaging(
+    client,
+    query,
+    org,
+    r => r.organization?.teams,
+    materialisedTeams,
+    { org, userLogins: [userLogin] },
+  );
+
+  return groups;
+}
+
+export async function getOrganizationTeamsForUsers(
+  client: typeof graphql,
+  org: string,
+  userLogins: string[],
+  teamTransformer: TeamTransformer = defaultOrganizationTeamTransformer,
+): Promise<{
+  groups: GroupEntity[];
+}> {
+  const all: GroupEntity[] = [];
+  for (const login of userLogins) {
+    const groups = await getOrganizationTeamsForUser(
+      client,
+      org,
+      login,
+      teamTransformer,
+    );
+    all.push(...groups);
+  }
+
+  return { groups: all };
+}
+
 export async function getOrganizationsFromUser(
   client: typeof graphql,
   user: string,

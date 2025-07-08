@@ -64,6 +64,7 @@ import {
   getOrganizationTeam,
   getOrganizationTeams,
   getOrganizationTeamsFromUsers,
+  getOrganizationTeamsForUsers,
   getOrganizationUsers,
 } from '../lib/github';
 import { assignGroupsToUsers, buildOrgHierarchy } from '../lib/org';
@@ -439,7 +440,7 @@ export class GithubOrgEntityProvider
 
     const usersToRebuild = users.filter(u => u.metadata.name === userLogin);
 
-    const { groups } = await getOrganizationTeamsFromUsers(
+    const { groups } = await getOrganizationTeamsForUsers(
       client,
       org,
       [userLogin],
